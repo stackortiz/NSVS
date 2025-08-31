@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nimblestack Pitch Deck</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F5;
+            color: #333333;
+            overflow-x: hidden;
+            scroll-snap-type: y mandatory;
+        }
+        
+        .slide-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 2rem;
+            /* --- Added padding to prevent nav overlap --- */
+            padding-bottom: 8rem; 
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        /* --- New styles for the Title Slide --- */
+        .title-slide {
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            display: grid;
+            place-items: center;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text contrast */
+        }
+
+        .title-content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 48rem;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 0.75rem;
+        }
+        
+        /* Remove text color override from the content of the title slide */
+        .title-content-wrapper .pane-content,
+        .title-content-wrapper .pane-content h2,
+        .title-content-wrapper .pane-content p {
+            color: white;
+        }
+        /* --- End of new styles --- */
+        
+        .left-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease-in-out;
+        }
+        
+        .left-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* --- Lightened the image overlay --- */
+            background-color: rgba(0, 0, 0, 0.3); 
+            z-index: 1;
+        }
+        
+        .slide-number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10vh;
+            font-weight: 700;
+            line-height: 1;
+            color: white;
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: 2;
+        }
+        
+        .right-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            /* --- Aligned content to the top --- */
+            justify-content: flex-start;
+            padding: 2rem;
+            padding-top: 4rem; /* Added padding to push content down from edge */
+            text-align: left; 
+        }
+
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .pane-content-wrapper {
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+        
+        /* --- Typography adjustments for readability --- */
+        .pane-content p, .pane-content ul, .pane-content ol, .pane-content h3 {
+             /* Adjusted font size */
+            font-size: 1.25rem;
+            /* Added line-height for better spacing */
+            line-height: 1.6;
+        }
+        
+        .pane-content h2 {
+            font-family: 'Oswald', sans-serif;
+            color: #0D1C49;
+            font-weight: 700; /* This is bold */
+            font-size: 2rem;
+            margin-bottom: 1.5rem; /* Added more space below main title */
+        }
+
+        .pane-content h3 {
+            font-family: 'Oswald', sans-serif;
+            color: #0D1C49;
+            font-weight: 700; /* This is bold */
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .pane-content p, .pane-content ul, .pane-content ol {
+            color: #333333;
+            margin-bottom: 1rem;
+        }
+        /* --- End of typography adjustments --- */
+        
+        .pane-content a {
+            color: #1976D2;
+            text-decoration: underline;
+            font-weight: 700;
+            transition: color 0.2s ease-in-out;
+            text-underline-offset: 4px;
+        }
+        
+        .pane-content a:hover {
+            color: #0D47A1;
+        }
+        
+        @media (max-width: 768px) {
+            .slide-section {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            .left-content, .right-content {
+                width: 100%;
+                min-height: 50vh;
+                justify-content: flex-start;
+                padding: 1rem;
+                padding-top: 2rem;
+            }
+        }
+        
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            gap: 0.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease-in-out;
+            border-radius: 9999px;
+            color: #666666;
+            background-color: transparent;
+            border: 1px solid #DDDDDD;
+            cursor: pointer;
+        }
+        
+        .nav-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            color: #AAAAAA;
+        }
+        
+        .nav-btn:not(.disabled):hover {
+            transform: translateY(-2px);
+            background-color: #F0F0F0;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        #timeline {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #DDDDDD;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        
+        .timeline-dot.active {
+            background-color: #0D1C49;
+            transform: scale(1.2);
+        }
+        
+        .timeline-dot:hover {
+            transform: scale(1.1);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="pitch-deck" class="w-full h-full"></div>
+
+    <nav>
+        <div class="nav-controls">
+            <button id="prev-btn" class="nav-btn">Previous</button>
+            <span id="slide-counter" class="text-lg font-bold"></span>
+            <button id="next-btn" class="nav-btn">Next</button>
+        </div>
+        <div id="timeline"></div>
+    </nav>
+    
+    <script>
+        const slides = [
+            {
+                title: "Unlocking the Next Frontier of Innovation",
+                img: "https://i.imgur.com/q94Ujdh.jpeg",
+                pages: [
+                    `
+                        <h2 class="text-xl md:text-2xl font-light text-white">In The Bronx</h2>
+                        <p><strong>Company Name:</strong> Nimblestack</p>
+                        <p><strong>Web Properties:</strong> nimblestack.io | nimblehack.com | nimblechat.com</p>
+                    `
+                ]
+            },
+            {
+                title: "The Opportunity",
+                img: "https://i.imgur.com/uAyUbQy.jpeg",
+                pages: [
+                    `
+                        <p>We live in an era of unprecedented technological advancement, yet many industries still struggle with fragmentation, 
+                        inefficiency, and a disconnect between customer expectation and operational reality. While the traditional startup model holds 
+                        the promise of significant returns, it is an extremely challenging path with a high failure rate.</p>
+                        <p>This is often due to a lack of funding and resources, but also to significant technical challenges, including the inability to rapidly 
+                        update software to meet evolving customer needs and market demands.</p>
+                        <p>We believe the future belongs to integrated, intelligent solutions, particularly at the intersection of Artificial Intelligence (AI), 
+                        customer experience, and physical operations.</p>
+                        <p>We also believe that the best way to build these future-proof businesses is through a Venture Studio model—a proven approach that significantly 
+                        de-risks early-stage investment and accelerates success.</p>
+                    `
+                ]
+            },
+            {
+                title: "The Problem: Value Extraction",
+                img: "https://i.imgur.com/uCbidwg.jpeg",
+                pages: [
+                    `
+                        <h3>The Unseen Frontier</h3>
+                        <p>The unprecedented wealth generated by the tech industry has created a modern-day gold rush, but it's one confined to a handful of coastal cities.</p>
+                        <p>We believe a new frontier exists, one with a vast, untapped vein of human potential. Nimblestack is a venture studio designed to initiate this next gold
+                         rush by discovering and scaling a previously overlooked class of world-class entrepreneurs in the Bronx. This strategic location, adjacent to Manhattan, provides 
+                         a crucial advantage by bridging local talent directly to a global network of opportunities.</p>
+                              
+                        <h3>Investing in Raw Talent</h3>
+                        <p>The raw talent in the Bronx is undeniable. Programs like The Knowledge House have already graduated nearly 1,000 technologists with starting salaries of $75K, 
+                        immediately elevating them into the middle class. The challenge is that without a local ecosystem of capital and mentorship, this talent is often forced to leave.</p>
+                    `,
+                    `
+                        <h3>The Bronx Talent Paradox</h3>
+                        <p>This lack of local capital creates a phenomenon known as <strong>value extraction</strong>, where wealth is funneled out of a community instead of circulating within it.
+                         The community misses out on the chance to build a self-sustaining economic engine. To an investor seeking a financial return, this represents a massive missed opportunity.</p>
+               
+                        <h3>Our Solution: The Nimblestack SDK</h3>
+                        <p>Just as the turntable democratized music creation and gave birth to hip-hop, we believe a new tool can do the same for software. Nimblestack's patented SDK is our version
+                         of the turntable—a powerful, accessible tool that allows local talent to bypass the traditional barriers of software development.</p>
+                   
+                        <p>It enables them to build, iterate, and monetize products at a speed that turns a historical inefficiency into a unique and compounding financial opportunity, 
+                        reversing the cycle of value extraction.</p>
+                    `
+                ]
+            },
+            {
+                title: "An Overlooked Alpha",
+                img: "https://i.imgur.com/hXXWrPc.jpeg",
+                pages: [
+                    `
+                        <p>The Bronx isn't a paradox of potential; it's a testament to resilience and an engine of culture that has shaped the world. This is the borough that gave birth to hip-hop 
+                        and continues to produce influential entertainers, groundbreaking politicians, brilliant scientists, and innovative entrepreneurs. Its value is immense, not hidden.</p>
+                        <p>Our mission is to scale this uniquely talented human capital. We see the historical imbalance of value extraction not as a problem for charity, but as a vast, untapped 
+                        market opportunity in New York City.</p>
+                    `,
+                    `
+                        <p>The Bronx has seen accelerators, but their impact has been limited by two factors: a lack of dedicated follow-on funding and a failure to attract long-term, committed entrepreneurs.</p>
+								<p>Our venture studio model is different. It's built for success in the Bronx because we directly address these shortcomings:</p>
+								<ul class="list-disc pl-5 mt-2">
+    									<li><strong>Guaranteed Follow-on Capital:</strong> We don't rely on outside funding. Our robust internal seed fund ensures our most promising ventures receive crucial initial investments directly from us, de-risking their early stages.</li>
+    									<li><strong>Deep Local Commitment:</strong> Our Nimblehack event finds "unlikely entrepreneurs" with on-the-ground expertise. We build profitable, equitable, and resilient tech companies, creating sustainable careers and ensuring the economic upside benefits local employees. This fosters loyalty and keeps our ventures rooted in the community.</li>
+    									<li><strong>Systematic Venture Building:</strong> We are active co-founders in every venture. Using our patented Software Development Kit (SDK), we enable ultra-rapid development. Our hands-on approach and comprehensive framework give Nimblestack a unique advantage for sustained success.</li>
+								</ul>
+                    `,
+                    `
+                        <h3>The Bronx is a Dynamic and Growing Market:</h3>
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Housing Boom:</strong> A record $4.3 billion investment in 2023, adding over 10,000 new housing units.</li>
+                            <li><strong>Infrastructure Upgrades:</strong> The Penn Access Project is creating four new Metro-North stations, drastically reducing travel times from the Bronx to Manhattan.</li>
+                            <li><strong>Community Hubs:</strong> The $349 million Bronx Point project has created a vibrant cultural destination with affordable housing and the Universal Hip Hop Museum.</li>
+                            <li><strong>Academic Empowerment:</strong> A historic $1 billion donation has made Albert Einstein College of Medicine tuition-free forever, securing a long-term pipeline of top-tier talent.</li>
+                        </ul>
+                    `,
+                    `
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Historical Precedent:</strong> The transformative power of technology on a regional economy is well-documented. For example, Ireland's GDP grew by an astonishing 13% in 2015, largely attributed to the influx of major tech companies, a model we aim to replicate by leveraging the Bronx's unique talent pool.</li>
+                            <li><strong>Supporting Ecosystem:</strong> The Bronx is a designated economic empowerment zone with grants and tax breaks, and New York State supports innovation with programs like New York Ventures.</li>
+                        </ul>
+                    `
+                ]
+            },
+            {
+                title: "The Venture Studio Model: A Proven Advantage",
+                img: "https://i.imgur.com/xdUJZBd.jpeg",
+                pages: [
+                    `
+                        <p>The Venture Studio model is a powerful engine for building successful companies. Studios don't just invest capital; they co-found companies by providing a centralized 
+                        team, shared services, and a systematic process to build and scale ventures.</p>
+                  
+                        <h3>Why the Model is Superior:</h3>
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Higher Success Rate:</strong> Studio-backed companies have a 30% failure rate, compared to 75% for traditional startups.</li>
+                            <li><strong>Faster to Market:</strong> New ventures are launched in 6-12 months, accelerating time to market.</li>
+                            <li><strong>De-Risked Investment:</strong> Studios de-risk early stages with shared expertise and resources, leading to higher ROI.</li>
+                        </ul>
+                    `
+                ]
+            },
+            {
+                title: "Why We Win: Our Unique Model",
+                img: "https://i.imgur.com/XgpgCiG.jpeg",
+                pages: [
+                    `
+                        <p>We succeed where traditional accelerators have not because we are active co-founders, not passive mentors. We don't just invest in ideas; we systematically build 
+                        "worker-first, high-growth tech companies" with pillars like "Shared Ownership." This ensures our ventures are deeply rooted in the community and have a unique competitive 
+                        advantage.</p>
+                    
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>A Patented SDK for Hyper-Efficient Development:</strong> Our core patented Nimblestack SDK is a proprietary toolkit that allows for ultra-rapid development, 
+                            enabling us to build ventures faster than anyone else.</li>
+                        </ul>
+                    
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>The Nimblehack Advantage:</strong> Our signature Nimblehack events are a systematic way to find "unlikely entrepreneurs" with on-the-ground expertise, 
+                            solving the challenge of finding talent with both technical skills and deep community knowledge.</li>
+                        </ul>
+                    
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Leveraged Services for Early Traction:</strong> Our integrated service businesses, like Nimblechat, provide early ventures with immediate product-market 
+                            fit and potential revenue, eliminating the common "zero-to-one" challenge that derails most startups.</li>
+                        </ul>
+                    `
+                ]
+            },
+            {
+                title: "Our Leadership: Gabriel Ortiz",
+                img: "https://i.imgur.com/eey2UXT.jpeg",
+                pages: [
+                    `
+                        <p>The Nimblestack advantage is built on our leadership's unique blend of lived experience and professional expertise. Gabriel Ortiz combines authentic local insight 
+                        with a proven track record in startup technology and venture capital.</p>
+                   
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Lived Experience:</strong> Grew up in the Bronx, providing an authentic understanding of the community and a deep, personal commitment to its success.</li>
+                            <li><strong>Technical Acumen:</strong> Gabriel has more than two decades of experience in technology, with a long career in building and raising capital for startups. 
+                            This includes a Master's degree and a portfolio of patents, and he will leverage this expertise to help our ventures develop defensible and potentially patentable 
+                            Intellectual Property.</li>
+                        </ul>
+                    
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Venture Capital Expertise:</strong> Extensive hands-on experience, having raised capital for a past venture and completed a Venture Fellowship.</li>
+                            <li><strong>Ethical Foundation:</strong> A proven track record of integrity and a clear-eyed view of the venture industry, enabling a more transparent investment model.</li>
+                        </ul>
+                    `
+                ]
+            },
+            {
+                title: "The Nimblehack Process",
+                img: "https://i.imgur.com/lwKWGMK.jpeg",
+                pages: [
+                    `
+                        <p>Our Nimblehack events are the primary way we find entrepreneurs. We don't just look for people with a polished business plan; we focus on "unlikely entrepreneurs" 
+                        with on-the-ground expertise. The selection process is a competitive event where participants develop ideas based on our five high-growth focus areas.</p>
+                        <p>It's designed to find individuals with raw aptitude and potential, then provide them with the training and support to develop the necessary skills to launch and scale 
+                        their business.</p>
+                    
+                        <p>Beyond its primary purpose, the Nimblehack has the potential to scale as a high-value recruitment pipeline for other tech companies seeking diverse talent, creating 
+                        an additional revenue stream through corporate sponsorships.</p>
+                    `,
+                    `
+                        <ul class="list-disc pl-5 mt-2">
+    								<li><strong>Selection Process:</strong> The Nimblehack is a competitive event where individuals and teams prototype an idea in one of our five high-growth focus areas. We judge them on the market viability, technical feasibility, individual talent, and community impact.</li>
+								</ul>
+
+								<ul class="list-disc pl-5 mt-2">
+    								<li><strong>Post-Hackathon:</strong> The most promising ideas and teams are selected to enter a 3-month intensive studio period.</li>
+								</ul>
+
+								<ul class="list-disc pl-5 mt-2">
+    								<li><strong>What Entrepreneurs Receive:</strong> Selected entrepreneurs get a living stipend to focus full-time on their venture. They gain exclusive access to our patented Nimblestack SDK, integrated services, and a dedicated team of experts for hands-on support in product development, design, and business strategy.</li>
+								</ul>
+
+								<ul class="list-disc pl-5 mt-2">
+    								<li><strong>Investment:</strong> At the conclusion of the studio period, we make an initial seed investment in the most promising businesses for a 33% equity stake. If a venture is not selected for funding, entrepreneurs can be reabsorbed into other Nimblestack-backed projects or internal service businesses.</li>
+								</ul>
+                    `
+                ]
+            },
+            {
+                title: "Nimblehack Focus Areas",
+                img: "https://i.imgur.com/gYaLMMb.jpeg",
+                pages: [
+                    `
+                        <h3>The Five Official Nimblehack Focus Areas:</h3>
+                        <ol class="list-decimal pl-5 mt-2">
+                            <li>Smart Warehousing, Supply Chain & Local Manufacturing</li>
+                            <li>Last-Mile Delivery Solutions</li>
+                            <li>Agentic AI</li>
+                            <li>Sustainable Urban Systems & Agri-Tech</li>
+                            <li>Nimblestack SDK: Experimental & Emerging Applications</li>
+                        </ol>
+                    
+                        <p class="mt-4">These focus areas are a blueprint for building the next generation of tech companies by uncovering the untapped human capital and on-the-ground wisdom abundant in the Bronx. While these are our initial areas of focus, they may evolve over time to align with new market opportunities and emerging technologies.</p>
+                    
+                        <p>This is more than a venture studio; it's a new model for equitable wealth creation with the potential for both transformative social impact and unprecedented financial returns.</p>
+                    `
+                ]
+            },
+             {
+                title: "Our $20 Million Strategic Raise - The Ask",
+                img: "https://i.imgur.com/fzefnIj.jpeg",
+                pages: [
+                    `
+                        <p>We are seeking <strong>$20 million</strong> in seed capital to fuel our operations for the next 2-5 years, ensuring a robust, sustainable, and high-growth ecosystem that delivers both financial returns and profound community impact.</p>
+                        <p>The strategic allocation is as follows:</p>
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>First Fund (Seed Investment):</strong> $5.0 million (25%)</li>
+                            <li><strong>Nimblestack SDK:</strong> $6.0 million (30%)</li>
+                            <li><strong>Nimblechat (Customer Fulfillment & Logistics):</strong> $5.0 million (25%)</li>
+                            <li><strong>Venture Studio Operations:</strong> $4.0 million (20%)</li>
+                        </ul>
+                    `
+                ]
+            },
+            {
+                title: "FAQ and Citations",
+                img: "https://i.imgur.com/oRhLcvC.jpeg",
+                pages: [
+                    `
+                        <h3>Frequently Asked Questions:</h3>
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Q: What is a Venture Studio, and how does it differ from a traditional accelerator?</strong><br>
+                            A: A venture studio actively builds and scales companies from the ground up, providing resources and expertise. Unlike accelerators, which are passive and provide mentorship for existing startups, a studio is an active co-founder and provides guaranteed follow-on capital.</li>
+                            <li><strong>Q: How does Nimblestack select entrepreneurs?</strong><br>
+                            A: We find entrepreneurs through our "Nimblehack" events, which are deep in the Bronx community. We focus on aptitude and potential, then provide the training and support to develop the necessary skills.</li>
+                            <li><strong>Q: What kind of companies will Nimblestack build?</strong><br>
+                            A: We are a thesis-driven venture studio focused on integrated, intelligent solutions at the intersection of AI, customer experience, and physical operations. Our focus areas are inspired by Dutch innovation and are tailored to benefit Bronx entrepreneurs.</li>
+                        </ul>
+                    `,
+                    `
+                        <ul class="list-disc pl-5 mt-2">
+                            <li><strong>Q: What is Nimblestack's investment model?</strong><br>
+                            A: After a 4-month intensive studio period where participants receive a living stipend, we make an initial seed investment in exchange for a 33% equity stake in the company. We also have a dedicated internal seed fund of $5.0 million for guaranteed follow-on capital.</li>
+                            <li><strong>Q: How does Nimblestack ensure its ventures are rooted in the Bronx?</strong><br>
+                            A: Our "Democratic Workplace & Shared Ownership" model ensures that the economic upside benefits local employees. Our focus on developing local human capital ensures our businesses are deeply invested in the borough's future.</li>
+                            <li><strong>Q: What are the web properties?</strong><br>
+                            A: Our web properties include nimblestack.io, nimblehack.com, and nimblechat.com.</li>
+                            <li><strong>Q: How does Nimblestack leverage technology?</strong><br>
+                            A: We use our proprietary, patented Software Development Kit (SDK) for ultra-rapid development and our integrated service businesses and data center infrastructure for operational support.</li>
+                        </ul>
+                    `,
+                    `
+                        <h3>Citations:</h3>
+                        <ol class="list-decimal pl-5 text-sm">
+    								<li><a href="https://digitallearningpractices.org/about/organizations/the-knowledge-house/" target="_blank">The Knowledge House - Reclaiming Digital Futures.</a></li>
+    								<li><a href="https://www.theknowledgehouse.org/hire/" target="_blank">Innovation Fellowship - THE KNOWLEDGE HOUSE.</a></li>
+    								<li><a href="https://data.census.gov/profile/Bronx_County,_New_York" target="_blank">Bronx County, NY Median Household Income Data.</a></li>
+    								<li><a href="https://www.freshplaza.com/north-america/article/9630667/new-york-city-s-biggest-fresh-produce-market-needs-an-update/" target="_blank">New York City's biggest fresh produce market needs an update - Fresh Plaza.</a></li>
+    								<li><a href="https://www.nyc.gov/assets/planning/download/pdf/plans-studies/sustainable-communities/bmn/bronx_metro_report/full_report.pdf" target="_blank">sustainable communities in the bronx - NYC.gov.</a></li>
+    								<li><a href="https://www.bxtimes.com/report-2023-was-a-landmark-year-for-development-in-the-bronx-10K-housing-units-added/" target="_blank">Report: 2023 was a landmark year for development in the Bronx, 10K housing units added – Bronx Times.</a></li>
+								</ol>
+ 							`,
+                    	`                            
+                        <ol class="list-decimal pl-5 text-sm" start="7">
+    								<li><a href="https://edc.nyc/press-release/nycedc-councilmember-salamanca-break-ground-hunts-point-cooperative-market-renovation" target="_blank">NYCEDC, Councilmember Salamanca, and Hunts Point Cooperative Market Break Ground...</a></li>
+    								<li><a href="https://www.google.com/search?q=https://www.norwoodnews.org/norwood-news-nycha-completes-infrastructure-upgrades-across-five-boroughs-with-1-2b-state-investment/" target="_blank">NYCHA Completes Infrastructure Upgrades Across Five Boroughs with $1.2B State Investment - Norwood News.</a></li>
+    								<li><a href="https://lmdevpartners.com/projects/bronx-point/" target="_blank">Bronx Point - L+M Development Partners LLC | Real Estate Development | Affordable Housing.</a></li>
+    								<li><a href="https://www.nyc.gov/site/hpd/news/025-21/mayor-de-blasio-l-m-development-partners-type-projects-break-ground-bronx-point-the" target="_blank">Bronx Point and Universal Hip Hop Museum Groundbreaking | City of New York.</a></li>
+    								<li><a href="https://www.google.com/search?q=https://en.wikipedia.org/wiki/New_York_Empowerment_Zone" target="_blank">New York Empowerment Zone.</a></li>
+    								<li><a href="https://www.google.com/search?q=https://esd.ny.gov/new-york-ventures" target="_blank">New York Ventures.</a></li>
+    								<li><a href="https://www.google.com/search?q=https://edc.nyc/program/greenlight-innovation-fund" target="_blank">NYCEDC Greenlight Innovation Fund.</a></li>
+								</ol>
+                    `
+                ]
+            }
+        ];
+
+        let currentSlide = 0;
+        let currentPage = 0;
+        const pitchDeckContainer = document.getElementById('pitch-deck');
+        const slideCounterEl = document.getElementById('slide-counter');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const timelineEl = document.getElementById('timeline');
+        const sections = [];
+        let isScrollingProgrammatically = false;
+
+        const renderCurrentPage = () => {
+            if (currentSlide > 0) {
+                const slide = slides[currentSlide];
+                const section = sections[currentSlide];
+                const pageContainer = section.querySelector('.page-container');
+                if (pageContainer) {
+                    pageContainer.innerHTML = slide.pages[currentPage];
+                    pageContainer.classList.remove('fade-in');
+                    void pageContainer.offsetWidth; 
+                    pageContainer.classList.add('fade-in');
+                }
+            }
+            updateNav();
+        };
+
+        const updateNav = () => {
+            const totalSlides = slides.length;
+            const totalPages = slides[currentSlide].pages.length;
+            slideCounterEl.textContent = `Slide ${currentSlide + 1}/${totalSlides} | Page ${currentPage + 1}/${totalPages}`;
+            
+            prevBtn.disabled = currentSlide === 0 && currentPage === 0;
+            prevBtn.classList.toggle('disabled', prevBtn.disabled);
+            
+            nextBtn.disabled = currentSlide === totalSlides - 1 && currentPage === totalPages - 1;
+            nextBtn.classList.toggle('disabled', nextBtn.disabled);
+            
+            document.querySelectorAll('.timeline-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        };
+
+        const goToSlide = (slideIndex, pageIndex = 0) => {
+            if (slideIndex >= 0 && slideIndex < sections.length) {
+                currentSlide = slideIndex;
+                currentPage = pageIndex;
+                
+                isScrollingProgrammatically = true;
+                sections[currentSlide].scrollIntoView({ behavior: 'smooth' });
+                renderCurrentPage();
+                setTimeout(() => { isScrollingProgrammatically = false; }, 1000);
+            }
+        };
+
+        const renderSlides = () => {
+            slides.forEach((slide, index) => {
+                const section = document.createElement('section');
+                section.id = `slide-${index}`;
+                section.classList.add('slide-section');
+
+                const emailLinkHtml = `
+                    <div class="absolute top-4 right-4 z-10 px-3 py-1 rounded-full text-sm font-medium transition-all">
+                        <a href="mailto:gabriel@nimblestack.io" class="block">contact</a>
+                    </div>
+                `;
+                
+                if (index === 0) {
+                    section.classList.add('title-slide');
+                    section.style.backgroundImage = `url('${slide.img}')`;
+                    const pageContent = slide.pages[0].replace(/text-gray-800/g, 'text-white');
+                    section.innerHTML = `
+                        ${emailLinkHtml}
+                        <div class="title-content-wrapper text-center text-white p-8 rounded-lg">
+                            <h1 class="font-bold text-4xl md:text-6xl" style="font-family: 'Oswald', sans-serif;">${slide.title}</h1>
+                            <div class="mt-6 text-lg md:text-xl pane-content">${pageContent}</div>
+                        </div>
+                    `;
+                    section.querySelector('div.absolute').classList.add('bg-black', 'bg-opacity-20', 'border', 'border-white', 'border-opacity-30');
+                    section.querySelector('div.absolute a').classList.add('text-white', 'hover:text-white', 'hover:underline');
+                } else {
+                    section.classList.add('flex-col', 'md:flex-row');
+                    const leftPane = document.createElement('div');
+                    leftPane.classList.add('left-content', 'md:w-1/2', 'w-full', 'md:h-full', 'h-1/2', 'text-white', 'text-center');
+                    leftPane.style.backgroundImage = `url('${slide.img}')`;
+
+                    const slideNumberEl = document.createElement('h1');
+                    slideNumberEl.classList.add('slide-number');
+                    slideNumberEl.textContent = index + 1;
+                    leftPane.append(slideNumberEl);
+
+                    const rightPane = document.createElement('div');
+                    rightPane.classList.add('right-content', 'md:w-1/2', 'w-full', 'md:h-full', 'h-1/2', 'relative');
+                    
+                    const contentWrapper = document.createElement('div');
+                    contentWrapper.classList.add('pane-content-wrapper');
+
+                    const titleEl = document.createElement('div');
+                    titleEl.classList.add('pane-content');
+                    titleEl.innerHTML = `<h2>${slide.title}</h2>`;
+
+                    const pageContainer = document.createElement('div');
+                    pageContainer.classList.add('page-container', 'active', 'pane-content');
+                    pageContainer.innerHTML = slide.pages[0];
+
+                    contentWrapper.append(titleEl, pageContainer);
+                    rightPane.innerHTML = emailLinkHtml;
+                    rightPane.querySelector('div.absolute').classList.add('bg-gray-100', 'border', 'border-gray-200');
+                    rightPane.querySelector('div.absolute a').classList.add('text-blue-600', 'hover:text-blue-800', 'hover:underline');
+                    rightPane.append(contentWrapper);
+                    
+                    section.append(leftPane, rightPane);
+                }
+                
+                pitchDeckContainer.appendChild(section);
+                sections.push(section);
+                
+                const dot = document.createElement('div');
+                dot.classList.add('timeline-dot');
+                dot.dataset.index = index;
+                dot.addEventListener('click', () => goToSlide(index));
+                timelineEl.appendChild(dot);
+            });
+            updateNav();
+        };
+
+        const updateOnScroll = () => {
+            if (isScrollingProgrammatically) return;
+            const viewportHeight = window.innerHeight;
+            sections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top >= -viewportHeight / 2 && rect.top < viewportHeight / 2) {
+                    if (currentSlide !== index) {
+                        currentSlide = index;
+                        currentPage = 0;
+                        renderCurrentPage();
+                    }
+                }
+            });
+        };
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < slides[currentSlide].pages.length - 1) {
+                currentPage++;
+                renderCurrentPage();
+            } else if (currentSlide < slides.length - 1) {
+                goToSlide(currentSlide + 1);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                renderCurrentPage();
+            } else if (currentSlide > 0) {
+                const prevSlideIndex = currentSlide - 1;
+                const lastPageIndex = slides[prevSlideIndex].pages.length - 1;
+                goToSlide(prevSlideIndex, lastPageIndex);
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                event.preventDefault();
+                nextBtn.click();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                prevBtn.click();
+            }
+        });
+
+        let scrollTimeout;
+        const debouncedUpdateOnScroll = () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateOnScroll, 50);
+        };
+        window.addEventListener('scroll', debouncedUpdateOnScroll);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSlides();
+        });
+    </script>
+</body>
+</html>
